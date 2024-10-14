@@ -1,0 +1,14 @@
+{
+  "name": "wagmi-wait-for-tx-bug",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "wagmi": "^2.12.17"
+  }
+}
