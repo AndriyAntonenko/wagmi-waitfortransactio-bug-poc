@@ -1,66 +1,29 @@
-## Foundry
+# `@wagmi/core` Bug in `waitForTransactionReceipt` 🐛
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+This repository demonstrates a proof of concept (PoC) for a bug found in the `@wagmi/core` library, specifically within the `waitForTransactionReceipt` function.
 
-Foundry consists of:
+### Bug Description
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+The issue occurs when providing arguments to bypass simulation or gas estimation. In this case, the function fails to pass the `data` argument to the underlying `eth_call` function. This omission can lead to unexpected errors being thrown, instead of the expected transaction results.
 
-## Documentation
+### Reproducing the Bug
 
-https://book.getfoundry.sh/
+To reproduce this issue, ensure you have both `anvil` and `bun` installed. Follow the steps below:
 
-## Usage
+```
+# install all dependencies
+bun install
 
-### Build
+# run anvil
+anvil --fork-url https://sepolia.base.org --block-time 5
 
-```shell
-$ forge build
+# execute the script
+bun index.ts
+
+# This script executing deposit() function from the contract from src/SimpleVault.sol
 ```
 
-### Test
+### Expected vs. Actual Behavior
 
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+* Expected behavior: The script should throw the error `AmountTooLow()`.
+* Actual behavior: The script throws a no receive error, highlighting the bug in the waitForTransactionReceipt function.
